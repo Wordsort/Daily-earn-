@@ -22,7 +22,7 @@ export default {
         return json({profile,transactions});
       }
       if (url.pathname === "/api/checkin" && request.method === "POST") {
-        const result = await supabase(env, "/rest/v1/rpc/claim_daily_checkin", "POST", {p_user_id:profile.id});
+        const result = await supabase(env, "/rest/v1/rpc/claim_daily_checkin", "POST", {p_user_id_uuid:profile.id});
         if (!result || result.error) return json({error:result?.message || "Check-in could not be claimed."},400);
         const refreshed = await upsertUser(user, env);
         const transactions = await supabase(env, `/rest/v1/transactions?user_id=eq.${refreshed.id}&select=label,amount,created_at&order=created_at.desc&limit=10`);
@@ -57,17 +57,50 @@ async function validateTelegramInitData(initData, botToken) {
 }
 function constantTimeEqual(a,b) { if(a.length!==b.length)return false; let out=0; for(let i=0;i<a.length;i++)out|=a.charCodeAt(i)^b.charCodeAt(i); return out===0; }
 async function supabase(env,path,method="GET",body) {
-  const res=await fetch(env.SUPABASE_URL+path,{method,headers:{"apikey":env.SUPABASE_SERVICE_ROLE_KEY,"Authorization":"Bearer "+env.SUPABASE_SERVICE_ROLE_KEY,"Content-Type":"application/json","Prefer":"return=representation"},body:body?JSON.stringify(body):undefined});
+  const res=await fetch(env.SUPABASE_URL+path,{method,headers:{"apikey":env.SUPABASE_SERVICE_ROLE_KEY,"Authorization":"Bearer "+env.SUPABASE_SERVICE_ROLE_KEY,"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=representation"},body:body?JSON.stringify(body):undefined});
   const data=await res.json().catch(()=>null);
-  if(!res.ok) throw new Error("Supabase request failed");
+  if(!res.ok) throw new Error(`Supabase request failed (${res.status}): ${JSON.stringify(data)}`);
   return data;
 }
 async function upsertUser(user,env) {
-  const rows=await supabase(env,"/rest/v1/users?on_conflict=telegram_id","POST",{telegram_id:user.id,username:user.username,first_name:user.first_name});
-  // Prefer the returned row. If upsert response is empty, select by Telegram ID.
-  const row=Array.isArray(rows)&&rows[0];
-  if(row)return row;
-  const found=await supabase(env,`/rest/v1/users?telegram_id=eq.${encodeURIComponent(user.id)}&select=*`);
-  if(!Array.isArray(found)||!found[0])throw new Error("Could not load user");
-  return found[0];
+  const existing = await supabase(
+    env,
+    `/rest/v1/users?telegram_id=eq.${encodeURIComponent(user.id)}&select=id,referral_code`
+  );
+
+  if (Array.isArray(existing) && existing[0]) {
+    const row = existing[0];
+    if (row.referral_code) {
+      const rows = await supabase(
+        env,
+        `/rest/v1/users?id=eq.${row.id}&select=*`,
+        "GET"
+      );
+      if (Array.isArray(rows) && rows[0]) return rows[0];
+    }
+    const code = row.referral_code || crypto.randomUUID().replace(/-/g, "").slice(0, 10).toUpperCase();
+    const updated = await supabase(
+      env,
+      `/rest/v1/users?id=eq.${row.id}`,
+      "PATCH",
+      { username: user.username, first_name: user.first_name, referral_code: code }
+    );
+    if (Array.isArray(updated) && updated[0]) return updated[0];
+    const refreshed = await supabase(env, `/rest/v1/users?id=eq.${row.id}&select=*`);
+    if (Array.isArray(refreshed) && refreshed[0]) return refreshed[0];
+    throw new Error("Could not refresh user profile");
+  }
+
+  const code = crypto.randomUUID().replace(/-/g, "").slice(0, 10).toUpperCase();
+  const rows = await supabase(
+    env,
+    "/rest/v1/users",
+    "POST",
+    { telegram_id: user.id, username: user.username, first_name: user.first_name, referral_code: code }
+  );
+  if (Array.isArray(rows) && rows[0]) return rows[0];
+
+  const found = await supabase(env, `/rest/v1/users?telegram_id=eq.${encodeURIComponent(user.id)}&select=*`);
+  if (Array.isArray(found) && found[0]) return found[0];
+  throw new Error("Could not create or load user");
 }
