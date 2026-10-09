@@ -37,7 +37,7 @@ async function load() {
   }
   try {
     const data = await api("/api/me");
-    state.profile = data.profile; state.transactions = data.transactions || []; render();
+    state.profile = { ...data.profile, connected: true, claimed_today: data.profile.last_checkin === new Date().toISOString().slice(0, 10) }; state.transactions = data.transactions || []; render();
     notice("You're connected", "Your account is ready. Reward features activate after the backend and Monetag verification are configured.");
   } catch (e) { notice("Setup required", e.message + ". Check Worker secrets and database setup."); }
 }
