@@ -22,7 +22,7 @@ export default {
         return json({profile,transactions});
       }
       if (url.pathname === "/api/checkin" && request.method === "POST") {
-        const result = await supabase(env, "/rest/v1/rpc/claim_daily_checkin", "POST", {p_user_id_uuid:profile.id});
+        const result = await supabase(env, "/rest/v1/rpc/claim_daily_checkin", "POST", {p_user_id:profile.id});
         if (!result || result.error) return json({error:result?.message || "Check-in could not be claimed."},400);
         const refreshed = await upsertUser(user, env);
         const transactions = await supabase(env, `/rest/v1/transactions?user_id=eq.${refreshed.id}&select=label,amount,created_at&order=created_at.desc&limit=10`);
