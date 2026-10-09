@@ -17,6 +17,7 @@
     </header>
 
     <main>
+      <div id="homeScreen" class="app-screen">
       <section class="welcome">
         <p class="eyebrow">WELCOME TO DAILYEARN</p>
         <h1 id="hello">Small Steps, Big Rewards ✨</h1>
@@ -53,6 +54,26 @@
       <section class="notice" id="notice"><strong>Getting ready</strong><span>Open this Mini App from your DailyEarn Telegram bot. Rewards stay in points until the payout system is configured.</span></section>
       <section class="section-head"><div><p class="eyebrow">YOUR ACTIVITY</p><h2>Recent transactions</h2></div></section>
       <section class="transactions" id="transactions"><div class="empty">Your confirmed activity will appear here.</div></section>
+
+      </div>
+      <div id="earnScreen" class="app-screen" hidden>
+        <section class="welcome"><p class="eyebrow">EARN POINTS</p><h1>Earn points ✨</h1><p class="muted">Choose an available activity.</p></section>
+        <section class="activity-list">
+          <article class="activity"><div class="activity-copy"><strong>Daily check-in</strong><span>Claim today's points</span></div><button id="earnClaimBtn" class="btn btn-small">Claim</button></article>
+          <article class="activity"><div class="activity-copy"><strong>Rewarded ad</strong><span>Available when Monetag is connected</span></div><button id="earnAdBtn" class="btn btn-small btn-outline">Watch</button></article>
+        </section>
+      </div>
+      <div id="referScreen" class="app-screen" hidden>
+        <section class="welcome"><p class="eyebrow">INVITE & GROW</p><h1>Invite friends 🎉</h1><p class="muted">Share your DailyEarn invite link.</p></section>
+        <section class="activity-list"><article class="activity"><div class="activity-copy"><strong>Invite a friend</strong><span>Share your personal link when Telegram is connected.</span></div><button id="referShareBtn" class="btn btn-small">Invite</button></article></section>
+      </div>
+      <div id="walletScreen" class="app-screen" hidden>
+        <section class="welcome"><p class="eyebrow">YOUR WALLET</p><h1>Points wallet ◉</h1><p class="muted">Review your confirmed points.</p></section>
+        <section class="balance-card"><div class="balance-top"><span>POINTS BALANCE</span><span class="coin">✦</span></div><div class="balance" id="walletBalance">0</div><div class="balance-bottom"><span>Points are not cash.</span><span class="pill">POINTS</span></div></section>
+        <section class="section-head"><div><p class="eyebrow">YOUR ACTIVITY</p><h2>Transactions</h2></div></section>
+        <section class="transactions" id="walletTransactions"><div class="empty">Your confirmed activity will appear here.</div></section>
+        <section class="notice"><strong>Withdrawals not enabled</strong><span>Secure payouts will be configured later.</span></section>
+      </div>
     </main>
 
     <nav class="bottom-nav">

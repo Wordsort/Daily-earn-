@@ -58,12 +58,42 @@ $("shareBtn").addEventListener("click", async () => {
   else if (navigator.clipboard) { await navigator.clipboard.writeText(link); notice("Invite link copied", link); }
   else notice("Your invite link", link);
 });
-document.querySelectorAll(".nav-item").forEach(b => b.addEventListener("click", () => {
-  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active")); b.classList.add("active");
-  const tab = b.dataset.tab;
-  const msgs = {home:["Home","Your points and daily activities are shown here."],earn:["Earn","Rewarded ads will activate when the Monetag placement is configured and verified."],refer:["Refer","Invite friends using your personal Telegram referral link."],wallet:["Wallet","Cash withdrawals remain disabled until revenue-backed payout rules are configured."]};
-  notice(msgs[tab][0], msgs[tab][1]);
-  if (tab === "earn") $("adBtn").scrollIntoView({behavior:"smooth",block:"center"});
-  if (tab === "refer") $("shareBtn").scrollIntoView({behavior:"smooth",block:"center"});
-}));
+const screens = {
+  home: $("homeScreen"),
+  earn: $("earnScreen"),
+  refer: $("referScreen"),
+  wallet: $("walletScreen")
+};
+
+document.querySelectorAll(".nav-item").forEach(button => {
+  button.addEventListener("click", () => {
+    const tab = button.dataset.tab;
+
+    Object.entries(screens).forEach(([name, screen]) => {
+      if (screen) screen.hidden = name !== tab;
+    });
+
+    document.querySelectorAll(".nav-item").forEach(item => {
+      item.classList.toggle("active", item === button);
+    });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    const messages = {
+      home: ["Home", "Your points and daily activities are shown here."],
+      earn: ["Earn", "Choose an activity. Monetag rewards are not active yet."],
+      refer: ["Refer", "Invite friends using your personal Telegram referral link."],
+      wallet: ["Wallet", "Review your points. Withdrawals are not enabled yet."]
+    };
+
+    if (typeof notice === "function" && messages[tab]) {
+      notice(messages[tab][0], messages[tab][1]);
+    }
+  });
+});
+
+$("earnClaimBtn")?.addEventListener("click", () => $("claimBtn")?.click());
+$("earnAdBtn")?.addEventListener("click", () => $("adBtn")?.click());
+$("referShareBtn")?.addEventListener("click", () => $("shareBtn")?.click());
+
 load();
