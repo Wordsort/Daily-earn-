@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#071a19">
+  <title>DailyEarn</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-mark">👛</div>
+      <div><div class="brand">DailyEarn</div><div class="subbrand">Play · Earn Points · Check In Daily</div></div>
+      <div class="online-dot" title="Connected"></div>
+    </header>
+
+    <main>
+      <section class="welcome">
+        <p class="eyebrow">WELCOME TO DAILYEARN</p>
+        <h1 id="hello">Small Steps, Big Rewards ✨</h1>
+        <p class="muted">Build your points one day at a time.</p>
+      </section>
+
+      <section class="balance-card">
+        <div class="balance-top"><span>POINTS BALANCE</span><span class="coin">✦</span></div>
+        <div class="balance" id="balance">0</div>
+        <div class="balance-bottom"><span id="status">Connect Telegram to get started</span><span class="pill">POINTS</span></div>
+      </section>
+
+      <section class="stats-grid">
+        <article class="stat-card"><div class="stat-icon">⚡</div><div class="stat-label">Energy</div><div class="stat-value" id="energy">5 / 5</div><div class="progress"><span id="energybar"></span></div></article>
+        <article class="stat-card"><div class="stat-icon">🔥</div><div class="stat-label">Daily streak</div><div class="stat-value"><span id="streak">0</span> days</div><div class="stat-note">Come back tomorrow</div></article>
+      </section>
+
+      <section class="section-head"><div><p class="eyebrow">TODAY'S ACTIVITIES</p><h2>Keep your streak alive</h2></div></section>
+      <section class="activity-list">
+        <article class="activity">
+          <div class="activity-icon green">✓</div><div class="activity-copy"><strong>Daily check-in</strong><span>Claim today's points</span></div>
+          <button id="claimBtn" class="btn btn-small">Claim</button>
+        </article>
+        <article class="activity">
+          <div class="activity-icon purple">▶</div><div class="activity-copy"><strong>Rewarded ad</strong><span>Watch when an eligible ad is available</span></div>
+          <button id="adBtn" class="btn btn-small btn-outline">Watch</button>
+        </article>
+        <article class="activity">
+          <div class="activity-icon gold">↗</div><div class="activity-copy"><strong>Invite a friend</strong><span>Share your personal invite link</span></div>
+          <button id="shareBtn" class="btn btn-small btn-outline">Invite</button>
+        </article>
+      </section>
+
+      <section class="notice" id="notice"><strong>Getting ready</strong><span>Open this Mini App from your DailyEarn Telegram bot. Rewards stay in points until the payout system is configured.</span></section>
+      <section class="section-head"><div><p class="eyebrow">YOUR ACTIVITY</p><h2>Recent transactions</h2></div></section>
+      <section class="transactions" id="transactions"><div class="empty">Your confirmed activity will appear here.</div></section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-tab="home"><span>⌂</span>Home</button>
+      <button class="nav-item" data-tab="earn"><span>▶</span>Earn</button>
+      <button class="nav-item" data-tab="refer"><span>↗</span>Refer</button>
+      <button class="nav-item" data-tab="wallet"><span>◉</span>Wallet</button>
+    </nav>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

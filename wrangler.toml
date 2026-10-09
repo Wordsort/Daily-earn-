@@ -1,0 +1,13 @@
+name = "dailyearn"
+main = "worker/index.js"
+compatibility_date = "2026-09-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+# Set secrets with:
+# npx wrangler secret put BOT_TOKEN
+# npx wrangler secret put SUPABASE_URL
+# npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
