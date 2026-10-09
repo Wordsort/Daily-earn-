@@ -1,3 +1,4 @@
+window.DAILYEARN_BOT_USERNAME = "DailyEarn247Bot";
 /* DailyEarn starter frontend.
    Real balances come only from the backend. Never put bot tokens or database secrets here. */
 const tg = window.Telegram?.WebApp;
